@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useDiagramStore from '../store/useDiagramStore';
 import { Wand2, X, Sparkles, ArrowRight, Loader2, Zap, Layout, MessageSquare } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5005';
 
 // ── Pre-built templates (instant, no API call) ──
 const TEMPLATES = {
@@ -191,6 +191,7 @@ export default function AiSuggestModal({ open, onClose }) {
             position: { x: 400, y: maxY + 140 },
             data: { subtype: sug.component, label: sug.label, status: 'healthy' },
         });
+        onClose(); // Automatically close modal so user can connect the new node
     };
 
     const PRIORITY_COLORS = {
@@ -230,8 +231,8 @@ export default function AiSuggestModal({ open, onClose }) {
                             key={t.key}
                             onClick={() => handleTabChange(t.key)}
                             className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[13px] font-medium transition-colors ${tab === t.key
-                                    ? 'text-white border-b-2 border-indigo-500 bg-slate-700/20'
-                                    : 'text-slate-500 hover:text-slate-300'
+                                ? 'text-white border-b-2 border-indigo-500 bg-slate-700/20'
+                                : 'text-slate-500 hover:text-slate-300'
                                 }`}
                         >
                             <t.icon size={13} />
