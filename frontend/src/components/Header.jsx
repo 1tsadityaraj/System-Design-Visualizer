@@ -6,13 +6,15 @@ import * as htmlToImage from 'html-to-image';
 import {
     Undo, Redo, ZoomIn, ZoomOut, Maximize,
     Download, Wand2, Rocket, Play, Square,
-    ChevronDown, Image, FileJson, FileCode,
+    ChevronDown, Image, FileJson, FileCode, Info
 } from 'lucide-react';
+import AboutModal from './AboutModal';
 
 export default function Header({ onAiSuggest }) {
     const { zoomIn, zoomOut, fitView } = useReactFlow();
     const { nodes, edges, isAnimating, past, future, undo, redo, toggleAnimation } = useDiagramStore();
     const [exportOpen, setExportOpen] = useState(false);
+    const [aboutOpen, setAboutOpen] = useState(false);
     const ref = useRef(null);
 
     useEffect(() => {
@@ -90,6 +92,15 @@ export default function Header({ onAiSuggest }) {
                     )}
                 </div>
 
+                {/* About Button */}
+                <button
+                    onClick={() => setAboutOpen(true)}
+                    className="flex items-center justify-center w-8 h-8 bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/40 rounded-lg text-slate-400 hover:text-white transition-colors"
+                    title="About Architecture Rules"
+                >
+                    <Info size={14} />
+                </button>
+
                 {/* AI Suggest */}
                 <button
                     onClick={onAiSuggest}
@@ -98,6 +109,9 @@ export default function Header({ onAiSuggest }) {
                     <Wand2 size={13} /> AI Suggest
                 </button>
             </div>
+
+            {/* Render Modal Outside of Header Layout Flow */}
+            <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
         </header>
     );
 }
