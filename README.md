@@ -15,6 +15,15 @@
 
 ---
 
+## 🎬 The "Show, Don't Just Tell" Video Demo
+
+<div align="center">
+  <img src="docs/screenshots/linter-demo.webp" width="100%" alt="Solving Architecture Linter Demo"/>
+  <p><i>Gamifying system design: Watch the static analysis linter clear out in real-time as the "Golden Path" architecture is built.</i></p>
+</div>
+
+---
+
 ## 📸 Screenshots
 
 <table>
@@ -120,7 +129,9 @@ When a user types *"Build me a WhatsApp clone"*, the system performs:
 
 ### 3. The Architecture Linter (Static Analysis)
 
-I implemented a static analysis engine that validates architectural topology in $O(n + e)$ time complexity (where $n$ = nodes, $e$ = edges). Running continuously on every graph mutation via the Zustand store, it ensures designs adhere to distributed systems best practices.
+I implemented a static analysis engine that acts as a real-time "Reliability Engineer." It validates architectural topology in $O(n + e)$ time complexity (where $n$ = nodes, $e$ = edges) using **Depth-First Search (DFS) reachability checks**.
+
+**The "Wow" Factor:** It is not simply counting nodes; it verifies topological correctness. For example, it traverses the directed graph to ensure a `Client` node can never reach a `Database` node without passing through a `Gateway`, instantly flagging direct exposure as a critical security risk.
 
 #### Linter Rules Engine
 
@@ -130,6 +141,16 @@ I implemented a static analysis engine that validates architectural topology in 
 | **LNT-002** | 🟡 Warning | High Traffic $\to$ No Cache | *"Performance Bottleneck: Add Redis for 90% latency reduction."* |
 | **LNT-003** | 🔴 Critical | Multi-Server $\to$ No LB | *"Single Point of Failure: Load Balancer required for availability."* |
 | **LNT-004** | ℹ️ Info | Static Assets $\to$ No CDN | *"Latency Issue: Consider CloudFront for edge caching."* |
+
+#### 🏆 The "Golden Path" Architecture
+The linter "gamifies" system design, teaching developers to aim for the high-performance "Golden Path":
+
+| Component | Engineering Role | Real-World Impact |
+|---|---|---|
+| **CDN** | Edge Caching | Reduces global latency from ~300ms to <20ms for static assets |
+| **Load Balancer** | Traffic Distribution | Ensures no single server is overwhelmed; enables "Horizontal Scaling" |
+| **API Gateway** | Security & Routing | Centralizes authentication, rate limiting, and request logging |
+| **Redundant Servers** | Fault Tolerance | Eliminates the "Single Point of Failure" (SPOF); allows zero-downtime updates |
 
 ---
 
@@ -237,7 +258,7 @@ cd ../backend && npm install
 ### Running
 
 ```bash
-# Terminal 1 — Backend (Port 5000)
+# Terminal 1 — Backend (Port 5005)
 cd backend
 echo "MONGODB_URI=mongodb://localhost:27017/system-design-visualizer" > .env
 node index.js
