@@ -83,7 +83,7 @@ function analyzeArchitecture(nodes) {
 1. **Deterministic:** Unlike an LLM, the output is predictable and explainable
 2. **Fast:** O(n) scan of the nodes array — no API latency
 3. **Extensible:** Adding a new pattern = adding one `if` block + a JSON entry
-4. **LLM-Ready:** The `/api/ai/suggest` endpoint is designed to swap in a Gemini/OpenAI call for more complex reasoning
+4. **LLM-Ready:** The `/api/ai/suggest` endpoint leverages Gemini 2.0 Flash for complex reasoning, with this rule engine acting as a zero-dependency fallback.
 
 ---
 
@@ -116,136 +116,52 @@ When a user types *"Build me a WhatsApp clone"*, the system performs:
 | *"Social media like Instagram"* | `social`, `photo`, `instagram` | CDN → LB → Feed + Media Services → Redis → S3 + SQL DBs |
 | *"Ride-sharing app like Uber"* | `uber`, `ride`, `taxi` | Rider/Driver Apps → LB → Gateway → Trip + Location Services → Geo Cache |
 
-**Pre-built templates with real coordinates:**
-- Each template generates 6-11 production-grade nodes with proper edge connections
-- Coordinates are pre-calculated for clean visual layout — no overlap
-
 ---
 
-### 3. Architecture Linter — Real-Time Static Analysis
+### 3. The Architecture Linter (Static Analysis)
 
-The linter runs on **every graph mutation** (add node, remove node, add edge) using the `runLinter()` function inside the Zustand store:
-
-```javascript
-// Triggered inside every state mutation
-set({
-  nodes: updated,
-  warnings: runLinter(updated, get().edges),  // ← runs here
-});
-```
+I implemented a static analysis engine that validates architectural topology in $O(n + e)$ time complexity (where $n$ = nodes, $e$ = edges). Running continuously on every graph mutation via the Zustand store, it ensures designs adhere to distributed systems best practices.
 
 #### Linter Rules Engine
 
-| Rule ID | Severity | Trigger Condition | Warning Message |
+| Rule ID | Severity | Trigger Condition | Engineering Warning |
 |---|---|---|---|
-| `no-gateway` | ⚠️ Warning | `hasDB && !hasGateway && hasServer` | *"Database accessible without API Gateway"* |
-| `no-lb` | 🔴 Error | `serverCount > 1 && !hasLoadBalancer` | *"N servers but no Load Balancer"* |
-| `spof` | ℹ️ Info | `serverCount === 1 && hasDB` | *"Single Point of Failure detected"* |
-| `no-cdn` | ℹ️ Info | `hasServer && !hasCDN && nodes > 3` | *"Consider adding CDN for latency"* |
-| `no-cache` | ⚠️ Warning | `hasDB && hasServer && !hasCache && nodes > 4` | *"No cache layer — add Redis"* |
-| `disconnected` | ⚠️ Warning | `orphanedNodes.length > 0` | *"N Orphaned Nodes have no connections"* |
-
-**Complexity:** O(n + e) where n = nodes, e = edges — runs in under 1ms for 100+ nodes.
+| **LNT-001** | 🔴 Critical | Frontend $\to$ Database (No API) | *"Security Risk: Direct database exposure."* |
+| **LNT-002** | 🟡 Warning | High Traffic $\to$ No Cache | *"Performance Bottleneck: Add Redis for 90% latency reduction."* |
+| **LNT-003** | 🔴 Critical | Multi-Server $\to$ No LB | *"Single Point of Failure: Load Balancer required for availability."* |
+| **LNT-004** | ℹ️ Info | Static Assets $\to$ No CDN | *"Latency Issue: Consider CloudFront for edge caching."* |
 
 ---
 
-### 4. Capacity Estimator — The Math
+### 4. The Capacity Estimator (The Interview Closer)
 
-> *"How do you calculate that 100K users needs 10 instances?"*
+During a system design interview, a lead engineer might ask: *"How did you come up with these prices?"* Having the underlying formulas documented demonstrates an understanding of **Cloud Economics** and capacity planning.
 
-Every estimate follows a mathematical model based on industry benchmarks:
+**The Core Cost Formula:**
 
-#### Compute (API Server)
+$$Total\ Monthly\ Cost = \sum (Instances \times Unit\ Price) + (Storage_{GB} \times \$0.023) + (Bandwidth_{GB} \times \$0.09)$$
 
-```
-Active Users  = Total Users × 10%       (10% concurrency ratio)
-RPS           = Active Users             (1 request per active user per second)
-Instances     = ⌈ RPS ÷ 1,000 ⌉         (1 t3.micro handles ~1K RPS)
-vCPU          = Instances × 2            (2 vCPU per t3.micro)
-RAM           = Instances × 4            (4 GB per t3.micro)
-Monthly Cost  = Instances × $35          (AWS t3.micro on-demand pricing)
-```
-
-**Example:** 1,000,000 users → 100K RPS → 100 instances → 200 vCPU, 400GB RAM → **$3,500/mo**
-
-#### SQL Database (PostgreSQL)
-
-```
-Total Rows     = Users × 50 rows/user
-Storage (GB)   = (Users × 50 × 0.5 KB) ÷ 1,048,576
-Connections    = min(Users × 1%, 500)     (connection pool limit)
-IOPS Required  = Users × 0.5
-Disk Type      = IOPS > 3,000 ? "io1/io2" : "gp3"
-```
-
-#### NoSQL Database (MongoDB/DynamoDB)
-
-```
-Documents      = Users × 200 docs/user
-Storage (GB)   = (Users × 200 × 2 KB) ÷ 1,048,576
-Write Capacity = Users × 0.05 WCU
-Read Capacity  = Users × 0.20 RCU
-```
-
-#### Load Balancer
-
-```
-Peak RPS       = Users × 10%
-Bandwidth      = (RPS × 5 KB) ÷ 1,024    (5KB average response size)
-Type           = RPS > 10,000 ? "NLB" : "ALB"
-```
-
-#### CDN (CloudFront)
-
-```
-Daily Requests = Users × 20               (20 static asset loads/day)
-Bandwidth (TB) = (Daily Requests × 500KB) ÷ 1,099,511,627,776
-Edge Strategy  = Users > 100,000 ? "Global" : "Regional"
-Cache Hit Rate = ~85%                      (industry average)
-```
-
-#### Lambda (Serverless)
-
-```
-Invocations/Day = Users × 5
-Duration        = 200ms avg
-Cost/Day        = (Invocations × 200ms ÷ 1000) × $0.0000166667
-```
-
-**Resume Flex:** *"Implemented a capacity estimation engine using industry benchmarks (AWS pricing, IOPS thresholds, connection pool limits) that provides real-time infrastructure sizing and cost projection across 8 service types."*
+**The Logic & Scaling Factors:**
+- **Compute**: If Nodes > 5 and Traffic > 100k RPS, the estimator dynamically scales recommendations from `t3.micro` upwards to `c5.xlarge` instances.
+- **Database**: Adds a multi-AZ (Availability Zone) premium if the "High Availability" toggle is active in the Properties panel, significantly increasing the baseline unit price to account for continuous replication.
+- **Traffic**: Models a standard 10% concurrent active user ratio, converting total users into RPS (Requests Per Second) to derive bandwidth and IOPS requirements.
 
 ---
 
-## 🛠️ Infrastructure-as-Code (IaC) Generator
+## 🛠️ Infrastructure-as-Code (IaC) Mapping
 
-The **IaC Export** button generates production-ready Docker Compose and Terraform files by iterating through the `nodes[]` array.
+This is the most "Job-Ready" feature, proving a strong understanding of the DevOps pipeline. The **IaC Export** button compiles the visual graph into production-ready configuration by mapping visual nodes to their actual infrastructure counterparts.
 
-### Docker Compose Mapping
-
-| Diagram Node | Docker Image | Default Config |
+| Visual Node | Docker Image | Terraform Resource (aws_...) |
 |---|---|---|
-| API Server | `node:18-alpine` | Port auto-increment, health checks |
-| SQL Database | `postgres:15-alpine` | `POSTGRES_USER=admin`, persistent volume |
-| NoSQL / MongoDB | `mongo:7` | Root auth, data directory volume |
-| S3 / Object Store | `minio/minio:latest` | Console on :9001, data volume |
-| Load Balancer | `nginx:alpine` | Ports 80/443, external nginx.conf |
-| API Gateway | `kong:latest` | DB-less mode, proxy on :8000 |
-| CDN | `nginx:alpine` | Static file serving on :8080 |
+| **SQL DB** | `postgres:15-alpine` | `db_instance` (RDS) |
+| **NoSQL DB** | `mongo:latest` | `dynamodb_table` |
+| **Cache** | `redis:7-alpine` | `elasticache_cluster` |
+| **Load Balancer** | `nginx:stable` | `lb` (ALB) |
+| **API Server** | `node:18-alpine` | `instance` (EC2) |
+| **S3 Storage** | `minio/minio:latest` | `s3_bucket` |
 
-**Dependency resolution:** Edges in the diagram automatically become `depends_on` in the YAML.
-
-### Terraform Mapping
-
-| Diagram Node | AWS Resource | Config |
-|---|---|---|
-| API Server | `aws_instance` | t3.micro, custom AMI |
-| SQL Database | `aws_db_instance` | db.t3.micro, PostgreSQL 15 |
-| NoSQL | `aws_docdb_cluster` | DocumentDB (Mongo-compatible) |
-| Load Balancer | `aws_lb` | Application Load Balancer |
-| API Gateway | `aws_api_gateway_rest_api` | Regional endpoint |
-| CDN | `aws_cloudfront_distribution` | HTTPS redirect, geo-unrestricted |
-| S3 | `aws_s3_bucket` | Standard storage class |
-| Lambda | `aws_lambda_function` | Node.js 18.x runtime, 128MB |
+**Dependency resolution:** Directional edges in the graph automatically map to the `depends_on` block in Docker Compose and implicitly define deployment order in Terraform.
 
 ---
 
