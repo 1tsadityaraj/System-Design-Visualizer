@@ -2,7 +2,7 @@
 
 # 🏗️ System Design Visualizer
 
-**A SaaS-grade system architecture design tool with an AI-powered Intelligence Layer**
+**A SaaS-grade system architecture design tool with AI-powered Intelligence, Chaos Engineering, DevSecOps Audit, and Cloud Economics**
 
 *Built with React · Zustand · React Flow · Node.js · Express · MongoDB · Socket.io*
 
@@ -10,16 +10,17 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://reactjs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248.svg)](https://mongodb.com/)
+[![Version](https://img.shields.io/badge/Version-2.0-ff6b6b.svg)](#)
 
 </div>
 
 ---
 
-## 🎬 The "Show, Don't Just Tell" Video Demo
+## 🎬 Demo — Building the "Golden Path" Architecture
 
 <div align="center">
-  <img src="docs/screenshots/linter-demo.webp" width="100%" alt="Solving Architecture Linter Demo"/>
-  <p><i>Gamifying system design: Watch the static analysis linter clear out in real-time as the "Golden Path" architecture is built.</i></p>
+  <img src="docs/screenshots/linter-demo.webp" width="100%" alt="Architecture Linter Demo"/>
+  <p><i>Watch the static analysis linter clear out in real-time as the production-grade architecture is built — then explore Chaos, Security, and Cost modules below.</i></p>
 </div>
 
 ---
@@ -28,12 +29,16 @@
 
 <table>
   <tr>
-    <td align="center"><b>Canvas + Architecture Linter</b><br/><img src="docs/screenshots/canvas-linter.png" width="400"/></td>
-    <td align="center"><b>Inspector + Capacity Estimator</b><br/><img src="docs/screenshots/inspector-capacity.png" width="400"/></td>
+    <td align="center"><b>Canvas + Architecture Linter</b><br/><img src="docs/screenshots/canvas-overview.png" width="400"/></td>
+    <td align="center"><b>🛡️ Security Posture Audit</b><br/><img src="docs/screenshots/security-overlay.png" width="400"/></td>
   </tr>
   <tr>
-    <td align="center"><b>AI Architecture Assistant</b><br/><img src="docs/screenshots/ai-suggest.png" width="400"/></td>
-    <td align="center"><b>IaC Export (Docker/Terraform)</b><br/><img src="docs/screenshots/export-dropdown.png" width="400"/></td>
+    <td align="center"><b>💀 Chaos Engineering — Node Killed</b><br/><img src="docs/screenshots/chaos-killed.png" width="400"/></td>
+    <td align="center"><b>💰 Live Bill + Cost Breakdown</b><br/><img src="docs/screenshots/live-bill.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>📦 Enterprise Export (K8s + Terraform)</b><br/><img src="docs/screenshots/export-k8s.png" width="400"/></td>
+    <td align="center"><b>Inspector + Capacity Estimator</b><br/><img src="docs/screenshots/inspector-capacity.png" width="400"/></td>
   </tr>
 </table>
 
@@ -41,148 +46,179 @@
 
 ## ✨ What Makes This Different
 
-This isn't just a drag-and-drop tool. It has a **three-layer intelligence system** that proves understanding of distributed systems, DevOps, and production engineering:
+This isn't just a drag-and-drop diagramming tool. It's a **five-layer engineering platform** that proves understanding of distributed systems, SRE, DevSecOps, Cloud Economics, and production-grade infrastructure:
 
-| Layer | What It Does | Interview Answer |
+| Layer | What It Does | The Signal It Sends |
 |---|---|---|
-| **Architecture Linter** | Scans the graph in real-time and flags anti-patterns (missing LB, SPOF, orphaned nodes) | *"I built a static analysis engine that validates architectural topology against distributed systems best practices."* |
-| **AI Suggestion Engine** | Rule-based pattern matching that recommends the optimal next component | *"The engine uses dependency graph analysis to identify missing infrastructure patterns and suggest components."* |
-| **Capacity Estimator** | Calculates RPS, IOPS, storage, bandwidth, and cost from user count inputs | *"I implemented a real-time cost-analysis algorithm that maps architectural complexity to estimated AWS/Azure monthly spend."* |
+| **Architecture Linter** | Real-time static analysis — flags anti-patterns (SPOF, missing LB, orphaned nodes) | *"I validate topology against distributed systems best practices in O(n+e) time."* |
+| **Chaos Engineering** | Kill nodes, propagate failures, re-route traffic through replicas | *"I understand that systems fail — and I design for failover and high availability."* |
+| **Cloud Economics** | Live monthly cost estimate with per-component AWS pricing breakdown | *"I can think about the bottom line — a 'cool' architecture is useless if it bankrupts the company."* |
+| **Security Posture** | DevSecOps audit — scores architecture against 5 vulnerability rules | *"I have a Security-First mindset. I flag Direct DB Exposure as a critical risk."* |
+| **Enterprise Exports** | Generates K8s manifests (Deployment, Service, Ingress, HPA) + Terraform HCL with variables | *"I'm production-ready. I understand container orchestration, IaC, and scaling."* |
 
 ---
 
-## 🧠 The Intelligence Layer: Deep Dive
+## 🔥 v2.0 — The "Grand Architect" Expansion
 
-### 1. AI Suggestion Engine — The Logic of Architecture
+### 1. 💀 Chaos Engineering Simulator (SRE Focus)
+
+> *Most student projects assume everything works perfectly. This one proves you understand that systems **fail**.*
+
+**How it works:**
+- Toggle **Chaos Mode** via the skull button in the toolbar
+- **Click any node** to "kill" it — visually turns red with a skull overlay and "KILLED" status
+- **Graph Propagation (BFS):** If a replica exists (same subtype), traffic automatically re-routes through green dashed edges
+- **No replica?** All downstream nodes turn **yellow (DEGRADED)**, clients turn **red (DOWN)**
+- Dead edges render as **red dashed lines** with reduced opacity
+- **Exit chaos mode** → all nodes instantly restore to healthy
+
+**The SRE Signal:** Demonstrating graph propagation shows you understand **Load Balancing Algorithms**, **High Availability (HA)**, and **Failover Patterns** — the same patterns used by PagerDuty's service dependency graphs.
+
+---
+
+### 2. 💰 Cloud Economics Engine (Financial Intelligence)
+
+> *Engineers who understand money are rare. This feature proves you can think about the bottom line.*
+
+**The Cost Formula:**
+
+$$Total\ Cost = \sum_{i=1}^{n} (Instance_{i} \times Rate_{i} \times 730h) + \sum_{e \in edges} (CrossRegionGB \times \$0.02) + ManagedServices$$
+
+**What it calculates:**
+
+| Component | Pricing |
+|-----------|---------|
+| EC2 instances | Mock AWS rates: `t3.micro` ($0.0104/hr) → `r5.xlarge` ($0.252/hr) |
+| Managed services | Fixed monthly: RDS ($25), ElastiCache ($15), SQS ($1), etc. |
+| Cross-region penalty | $0.02/GB + latency penalty when nodes span regions |
+| Lambda | $0.20 per million invocations |
+
+The **floating Live Bill** widget updates instantly as you add/remove/modify nodes, showing monthly total, annual projection, and hourly rate.
+
+---
+
+### 3. 🛡️ Security Posture Overlay (DevSecOps)
+
+> *Your "Security Score" and critical rules are exactly what senior engineers look for in code reviews.*
+
+**Security Rules Engine:**
+
+| Rule | Severity | Trigger | Why It Matters |
+|------|----------|---------|----------------|
+| Direct DB Exposure | 🔴 **CRITICAL** | Client → Database without backend | Violates network isolation; exposes data layer |
+| No API Gateway/WAF | 🟠 **HIGH** | Client → Server without Gateway | No rate limiting, no request validation |
+| No Authentication | 🟠 **HIGH** | Servers + Clients but no Gateway | All endpoints publicly accessible |
+| No Encryption (TLS) | 🟡 **MEDIUM** | Server → DB without TLS indicators | Data in transit is vulnerable to MITM attacks |
+| Single Region | 🟡 **MEDIUM** | All nodes in one region | No disaster recovery; single point of failure |
+
+**Features:**
+- **Security Score** (0–100) with color-coded progress bar
+- **Severity grid** showing CRIT/HIGH/MED/LOW counts at a glance
+- **Edge highlighting:** Critical = pulsing red with glow, High = orange, Medium = yellow
+- **Node badges** showing vulnerability count per component
+
+---
+
+### 4. 📦 Enterprise-Scale Exports (Production Ready)
+
+> *Generating a `.zip` with `deployment.yaml`, `service.yaml`, and `hpa.yaml` is the ultimate "I'm ready for production" signal.*
+
+| Export Type | What's Generated | Recruiter Value |
+|---|---|---|
+| **Kubernetes (.zip)** | `deployment.yaml`, `service.yaml`, `ingress.yaml`, `hpa.yaml` per component + `namespace.yaml` + `all-in-one.yaml` + `README.md` | **Extreme** — Container orchestration & scaling |
+| **Terraform (HCL)** | Clean HCL with `variable` blocks, `sensitive` flags for passwords, S3 backend, ACM cert refs, and proper resource tagging | **Extreme** — Infrastructure as Code |
+| **Docker Compose** | Multi-service YAML with networks, volumes, and dependency resolution | **Standard** — Local dev environments |
+
+**K8s specifics:**
+- Servers → `Deployment` with **HPA** (auto-scale 2–10 replicas at 70% CPU)
+- Databases → `StatefulSet` with `volumeClaimTemplates` and `secretKeyRef` for credentials
+- Gateways → `Ingress` with TLS termination and cert-manager annotations
+- Health probes: `livenessProbe` + `readinessProbe` on every container
+
+**Terraform specifics:**
+- `db_password` marked as `sensitive = true` (won't echo in `terraform plan`)
+- S3 backend for remote state management
+- Variables for `instance_type`, `region`, `acm_certificate_arn`, subnet IDs
+
+---
+
+### 5. 🌐 Multi-Region Visualization
+
+- Nodes display **region badges** (US-E, US-W, EU, APAC)
+- **Cross-region edges** render as **dashed, pulsing purple lines**
+- Cost engine applies **data transfer penalties** between regions
+- Inspector allows configuring region and instance size per node
+
+---
+
+## 🧠 The Intelligence Layer (v1.0)
+
+### AI Suggestion Engine
 
 > *"How does the AI know to suggest Redis or a Load Balancer?"*
 
-The engine at `POST /api/ai/suggest` doesn't use random rules — it follows **System Design Patterns** by scanning the `nodes[]` and `edges[]` arrays for missing links.
-
-#### Dependency Analysis Rules (If-This-Then-That)
+The engine scans the `nodes[]` and `edges[]` arrays for missing architectural patterns:
 
 | Current Diagram Has... | But Is Missing... | Engine Suggests... | Engineering Reason |
 |---|---|---|---|
-| API Server + SQL DB | Redis Cache | `"Add Redis Cache"` | Reduces DB read latency by ~90% and absorbs peak traffic via read-through caching |
-| API Server(s) | Load Balancer | `"Add ALB/NLB"` | Prevents single point of failure; enables horizontal scaling via round-robin distribution |
-| Static Assets / S3 | CDN | `"Add CloudFront"` | Reduces latency for global users by caching at edge locations (PoPs) |
-| API Server(s) | API Gateway | `"Add API Gateway"` | Centralizes rate limiting, JWT validation, request marshalling, and API versioning |
-| Server + Database | Message Queue | `"Add SQS/RabbitMQ"` | Enables async processing, decouples services, handles traffic spikes gracefully |
-| Multiple Servers | Load Balancer | ⚠️ `CRITICAL WARNING` | Traffic cannot be distributed; all requests hit a single instance |
+| API Server + SQL DB | Redis Cache | `"Add Redis Cache"` | Reduces DB read latency by ~90% via read-through caching |
+| API Server(s) | Load Balancer | `"Add ALB/NLB"` | Prevents SPOF; enables horizontal scaling |
+| Static Assets / S3 | CDN | `"Add CloudFront"` | Reduces global latency from ~300ms to <20ms |
+| API Server(s) | API Gateway | `"Add API Gateway"` | Centralizes rate limiting, JWT validation, API versioning |
+| Server + Database | Message Queue | `"Add SQS/RabbitMQ"` | Enables async processing, decouples services |
 
-```javascript
-// Core logic from backend/controllers/aiController.js
-function analyzeArchitecture(nodes) {
-  const types = new Set(nodes.map(n => n.data?.subtype));
-
-  if (types.has('server') && !types.has('cache')) {
-    suggestions.push({
-      component: 'cache',
-      label: 'Redis Cache',
-      reason: 'Reduces read latency by up to 90%',
-      priority: 'high',
-    });
-  }
-  // ... 6 more rules based on distributed systems patterns
-}
-```
-
-#### Why This Rule-Based Approach Works
-
-1. **Deterministic:** Unlike an LLM, the output is predictable and explainable
-2. **Fast:** O(n) scan of the nodes array — no API latency
-3. **Extensible:** Adding a new pattern = adding one `if` block + a JSON entry
-4. **LLM-Ready:** The `/api/ai/suggest` endpoint leverages Gemini 2.0 Flash for complex reasoning, with this rule engine acting as a zero-dependency fallback.
-
----
-
-### 2. Natural Language → Diagram (Describe → Build)
-
-When a user types *"Build me a WhatsApp clone"*, the system performs:
+### Natural Language → Diagram
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  User Input      │ ──→ │ Intent Extraction │ ──→ │ Graph Generation│
-│  "WhatsApp clone"│     │ Keywords: chat,   │     │ Returns nodes[] │
-│                  │     │ websocket, msg    │     │ + edges[] JSON  │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-                                                         │
-                                                         ▼
-                                              ┌─────────────────────┐
-                                              │  Canvas Population   │
-                                              │  setNodes + setEdges │
-                                              │  via Zustand store   │
-                                              └─────────────────────┘
+User Input: "Build me a WhatsApp clone"
+     ↓
+Intent Extraction: [chat, websocket, real-time, message]
+     ↓
+Graph Generation: WebSocket Server → Redis Pub/Sub → Message Queue → NoSQL DB
+     ↓
+Canvas Population: setNodes + setEdges via Zustand store
 ```
 
-**Keyword → Template Mapping:**
+| User Says... | Generated Architecture |
+|---|---|
+| *"Chat app like WhatsApp"* | WebSocket Server → Redis Pub/Sub → Message Queue → NoSQL DB |
+| *"Video streaming platform"* | CDN → LB → Gateway → Content Services → S3 Storage |
+| *"Online store with payments"* | CDN → LB → Gateway → Product/Order/Payment Services → SQL DBs |
+| *"Social media like Instagram"* | CDN → LB → Feed + Media Services → Redis → S3 + SQL DBs |
 
-| User Says... | Detected Intent | Generated Architecture |
-|---|---|---|
-| *"Build a chat app like WhatsApp"* | `chat`, `message`, `real-time` | WebSocket Server → Redis Pub/Sub → Message Queue → NoSQL DB |
-| *"Video streaming platform"* | `video`, `stream`, `netflix` | CDN → LB → API Gateway → Auth + Content Services → S3 Storage |
-| *"Online store with payments"* | `shop`, `ecommerce`, `payment` | CDN → LB → Gateway → Product/Order/Payment Services → SQL DBs |
-| *"Social media like Instagram"* | `social`, `photo`, `instagram` | CDN → LB → Feed + Media Services → Redis → S3 + SQL DBs |
-| *"Ride-sharing app like Uber"* | `uber`, `ride`, `taxi` | Rider/Driver Apps → LB → Gateway → Trip + Location Services → Geo Cache |
+### Architecture Linter (Static Analysis)
 
----
+Real-time validation engine that acts as a "Reliability Engineer" — verifies architectural topology in $O(n + e)$ time using **DFS reachability checks**:
 
-### 3. The Architecture Linter (Static Analysis)
-
-I implemented a static analysis engine that acts as a real-time "Reliability Engineer." It validates architectural topology in $O(n + e)$ time complexity (where $n$ = nodes, $e$ = edges) using **Depth-First Search (DFS) reachability checks**.
-
-**The "Wow" Factor:** It is not simply counting nodes; it verifies topological correctness. For example, it traverses the directed graph to ensure a `Client` node can never reach a `Database` node without passing through a `Gateway`, instantly flagging direct exposure as a critical security risk.
-
-#### Linter Rules Engine
-
-| Rule ID | Severity | Trigger Condition | Engineering Warning |
+| Rule ID | Severity | Trigger | Warning |
 |---|---|---|---|
-| **LNT-001** | 🔴 Critical | Frontend $\to$ Database (No API) | *"Security Risk: Direct database exposure."* |
-| **LNT-002** | 🟡 Warning | High Traffic $\to$ No Cache | *"Performance Bottleneck: Add Redis for 90% latency reduction."* |
-| **LNT-003** | 🔴 Critical | Multi-Server $\to$ No LB | *"Single Point of Failure: Load Balancer required for availability."* |
-| **LNT-004** | ℹ️ Info | Static Assets $\to$ No CDN | *"Latency Issue: Consider CloudFront for edge caching."* |
+| **LNT-001** | 🔴 Critical | Frontend → Database (direct) | *"Security Risk: Direct database exposure."* |
+| **LNT-002** | 🟡 Warning | High Traffic → No Cache | *"Performance Bottleneck: Add Redis."* |
+| **LNT-003** | 🔴 Critical | Multi-Server → No LB | *"SPOF: Load Balancer required."* |
+| **LNT-004** | ℹ️ Info | Static Assets → No CDN | *"Latency Issue: Consider CloudFront."* |
 
-#### 🏆 The "Golden Path" Architecture
-The linter "gamifies" system design, teaching developers to aim for the high-performance "Golden Path":
-
-| Component | Engineering Role | Real-World Impact |
-|---|---|---|
-| **CDN** | Edge Caching | Reduces global latency from ~300ms to <20ms for static assets |
-| **Load Balancer** | Traffic Distribution | Ensures no single server is overwhelmed; enables "Horizontal Scaling" |
-| **API Gateway** | Security & Routing | Centralizes authentication, rate limiting, and request logging |
-| **Redundant Servers** | Fault Tolerance | Eliminates the "Single Point of Failure" (SPOF); allows zero-downtime updates |
-
----
-
-### 4. The Capacity Estimator (The Interview Closer)
-
-During a system design interview, a lead engineer might ask: *"How did you come up with these prices?"* Having the underlying formulas documented demonstrates an understanding of **Cloud Economics** and capacity planning.
-
-**The Core Cost Formula:**
+### Capacity Estimator
 
 $$Total\ Monthly\ Cost = \sum (Instances \times Unit\ Price) + (Storage_{GB} \times \$0.023) + (Bandwidth_{GB} \times \$0.09)$$
 
-**The Logic & Scaling Factors:**
-- **Compute**: If Nodes > 5 and Traffic > 100k RPS, the estimator dynamically scales recommendations from `t3.micro` upwards to `c5.xlarge` instances.
-- **Database**: Adds a multi-AZ (Availability Zone) premium if the "High Availability" toggle is active in the Properties panel, significantly increasing the baseline unit price to account for continuous replication.
-- **Traffic**: Models a standard 10% concurrent active user ratio, converting total users into RPS (Requests Per Second) to derive bandwidth and IOPS requirements.
+The estimator dynamically scales recommendations from `t3.micro` → `c5.xlarge` based on user count inputs (1K → 10M users).
 
 ---
 
-## 🛠️ Infrastructure-as-Code (IaC) Mapping
+## 🛠️ IaC Node Mapping
 
-This is the most "Job-Ready" feature, proving a strong understanding of the DevOps pipeline. The **IaC Export** button compiles the visual graph into production-ready configuration by mapping visual nodes to their actual infrastructure counterparts.
-
-| Visual Node | Docker Image | Terraform Resource (aws_...) |
-|---|---|---|
-| **SQL DB** | `postgres:15-alpine` | `db_instance` (RDS) |
-| **NoSQL DB** | `mongo:latest` | `dynamodb_table` |
-| **Cache** | `redis:7-alpine` | `elasticache_cluster` |
-| **Load Balancer** | `nginx:stable` | `lb` (ALB) |
-| **API Server** | `node:18-alpine` | `instance` (EC2) |
-| **S3 Storage** | `minio/minio:latest` | `s3_bucket` |
-
-**Dependency resolution:** Directional edges in the graph automatically map to the `depends_on` block in Docker Compose and implicitly define deployment order in Terraform.
+| Visual Node | Docker Image | Terraform Resource | K8s Kind |
+|---|---|---|---|
+| **SQL DB** | `postgres:15-alpine` | `aws_db_instance` (RDS) | `StatefulSet` |
+| **NoSQL DB** | `mongo:7` | `aws_docdb_cluster` | `StatefulSet` |
+| **Cache** | `redis:7-alpine` | `aws_elasticache_cluster` | `Deployment` |
+| **Load Balancer** | `nginx:alpine` | `aws_lb` (ALB) | `Service` (LoadBalancer) |
+| **API Server** | `node:18-alpine` | `aws_instance` (EC2) | `Deployment` + `HPA` |
+| **API Gateway** | `kong:latest` | `aws_api_gateway_rest_api` | `Deployment` + `Ingress` |
+| **S3 Storage** | `minio/minio:latest` | `aws_s3_bucket` + versioning + SSE | — |
+| **CDN** | `nginx:alpine` | `aws_cloudfront_distribution` | — |
+| **Lambda** | `aws-lambda-nodejs:18` | `aws_lambda_function` | `Deployment` |
+| **Message Queue** | `rabbitmq:3-management` | `aws_sqs_queue` | `Deployment` |
 
 ---
 
@@ -191,46 +227,50 @@ This is the most "Job-Ready" feature, proving a strong understanding of the DevO
 ```
 sys-design-visualizer/
 │
-├── frontend/                           # React + Vite + Tailwind CSS
+├── frontend/                             # React + Vite + Tailwind CSS
 │   └── src/
 │       ├── store/
-│       │   └── useDiagramStore.js      ← Zustand (Undo/Redo + Linter + Snapshots)
+│       │   └── useDiagramStore.js        ← Zustand (Undo/Redo + Linter + Chaos + Security + Cost)
 │       ├── components/
 │       │   ├── customNodes/
-│       │   │   └── SystemNode.jsx      ← React.memo, 4 Handles, Status Pulse
+│       │   │   └── SystemNode.jsx        ← React.memo, Chaos/Security Visuals, Region Badges
+│       │   ├── overlays/
+│       │   │   ├── LiveBill.jsx          ← Floating Cloud Economics Widget
+│       │   │   ├── SecurityPanel.jsx     ← Security Audit Panel (Score + Findings)
+│       │   │   └── Legend.jsx            ← Professional Tabbed Legend
 │       │   ├── icons/
-│       │   │   └── ServiceIcons.jsx    ← 11 Unique SVG Icons
-│       │   ├── Header.jsx             ← Toolbar + IaC Export Dropdown
-│       │   ├── Sidebar.jsx            ← DnD Component Library + Search
-│       │   ├── FlowCanvas.jsx         ← Snap-to-Grid Canvas + Shortcuts
-│       │   ├── Inspector.jsx          ← Properties + Capacity Estimator
-│       │   ├── LinterPanel.jsx        ← Real-time Warning Overlay
-│       │   ├── SnapshotPanel.jsx      ← Version Management (V1, V2...)
-│       │   └── AiSuggestModal.jsx     ← AI Suggestions + Templates + NLP
+│       │   │   └── ServiceIcons.jsx      ← 11 Unique SVG Icons
+│       │   ├── Header.jsx               ← Toolbar + Chaos/Security Toggles + K8s Export
+│       │   ├── Sidebar.jsx              ← DnD Component Library + Search
+│       │   ├── FlowCanvas.jsx           ← Canvas + Cross-Region Edges + Mode Overlays
+│       │   ├── Inspector.jsx            ← Properties + Capacity + Security Tab
+│       │   ├── LinterPanel.jsx          ← Real-time Warning Overlay
+│       │   ├── SnapshotPanel.jsx        ← Version Management (V1, V2...)
+│       │   └── AiSuggestModal.jsx       ← AI Suggestions + Templates + NLP
 │       └── utils/
-│           ├── iacGenerator.js        ← Docker Compose + Terraform Generator
-│           └── capacityEstimator.js   ← Infrastructure Sizing Algorithm
+│           ├── iacGenerator.js           ← Docker + Terraform + K8s Manifest Generator
+│           └── capacityEstimator.js      ← Infrastructure Sizing Algorithm
 │
-├── backend/                            # Node.js + Express + MongoDB
-│   ├── index.js                       ← Server + Socket.io Room Handler
+├── backend/                              # Node.js + Express + MongoDB
+│   ├── index.js                          ← Server + Socket.io Room Handler
 │   ├── models/
-│   │   ├── Diagram.js                 ← Directed Graph Schema (nodes + edges)
-│   │   └── User.js                    ← Auth Model (bcrypt hashing)
+│   │   ├── Diagram.js                    ← Directed Graph Schema (nodes + edges)
+│   │   └── User.js                       ← Auth Model (bcrypt hashing)
 │   ├── controllers/
-│   │   ├── diagramController.js       ← CRUD + Graph Serialization
-│   │   ├── authController.js          ← JWT Register/Login
-│   │   └── aiController.js            ← Suggestion Engine + NLP Endpoint
+│   │   ├── diagramController.js          ← CRUD + Graph Serialization
+│   │   ├── authController.js             ← JWT Register/Login
+│   │   └── aiController.js              ← Suggestion Engine + NLP Endpoint
 │   ├── middleware/
-│   │   └── auth.js                    ← JWT Verification Middleware
+│   │   └── auth.js                       ← JWT Verification Middleware
 │   ├── routes/
-│   │   ├── diagramRoutes.js           ← REST: POST/GET /api/diagrams
-│   │   ├── authRoutes.js              ← POST /api/auth/register|login
-│   │   └── aiRoutes.js                ← POST /api/ai/suggest|nlp
+│   │   ├── diagramRoutes.js              ← REST: POST/GET /api/diagrams
+│   │   ├── authRoutes.js                 ← POST /api/auth/register|login
+│   │   └── aiRoutes.js                   ← POST /api/ai/suggest|nlp
 │   └── utils/
-│       └── serializer.js              ← React Flow JSON ↔ Hierarchical Tree
+│       └── serializer.js                 ← React Flow JSON ↔ Hierarchical Tree
 │
 └── docs/
-    └── screenshots/                    ← Application Screenshots
+    └── screenshots/                       ← Application Screenshots
 ```
 
 ---
@@ -313,6 +353,7 @@ Open **http://localhost:5173** in your browser.
 | Zustand selectors | Components subscribe to specific slices, not the whole store | Minimal re-renders |
 | Snap-to-Grid | 20px grid reduces position change events | Smoother dragging |
 | History cap | Max 40 undo states, FIFO eviction | Bounded memory usage |
+| Edge memoization | `useMemo` for styled edges with security/cross-region overlays | Prevents re-computation |
 
 ---
 
@@ -328,7 +369,8 @@ Open **http://localhost:5173** in your browser.
 | **Database** | MongoDB + Mongoose | Schema-flexible for graph data |
 | **Auth** | JWT + bcrypt | Stateless, secure password hashing |
 | **Real-time** | Socket.io | WebSocket rooms for collaboration |
-| **IaC** | Custom generators | Zero-dependency YAML/HCL generation |
+| **IaC** | Custom generators | Docker Compose + Terraform HCL + K8s Manifests |
+| **Bundling** | JSZip | Client-side ZIP generation for K8s exports |
 
 ---
 

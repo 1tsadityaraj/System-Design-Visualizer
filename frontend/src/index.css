@@ -62,6 +62,98 @@ body {
   }
 }
 
+/* ── Cross-Region Edge Pulsing ── */
+.cross-region-edge .react-flow__edge-path {
+  animation: cross-region-pulse 2s ease-in-out infinite, dash 1s linear infinite;
+}
+
+@keyframes cross-region-pulse {
+  0%, 100% {
+    opacity: 0.7;
+    stroke-width: 2;
+  }
+  50% {
+    opacity: 1;
+    stroke-width: 3;
+  }
+}
+
+/* ── Security Edge Animations ── */
+.security-critical-edge .react-flow__edge-path {
+  animation: security-critical-pulse 0.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
+}
+
+.security-high-edge .react-flow__edge-path {
+  animation: security-high-pulse 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 3px rgba(249, 115, 22, 0.4));
+}
+
+@keyframes security-critical-pulse {
+  0%, 100% {
+    stroke: #ef4444;
+    stroke-width: 3;
+    opacity: 0.8;
+  }
+  50% {
+    stroke: #ff6b6b;
+    stroke-width: 4;
+    opacity: 1;
+  }
+}
+
+@keyframes security-high-pulse {
+  0%, 100% {
+    stroke: #f97316;
+    stroke-width: 2.5;
+    opacity: 0.8;
+  }
+  50% {
+    stroke: #fb923c;
+    stroke-width: 3;
+    opacity: 1;
+  }
+}
+
+/* ── Chaos Mode ── */
+.chaos-mode-active {
+  position: relative;
+}
+
+.chaos-mode-active .react-flow__pane {
+  cursor: crosshair;
+}
+
+.chaos-killed-node {
+  animation: killed-shake 0.4s ease-out;
+}
+
+.chaos-degraded-node {
+  animation: degraded-pulse 2s ease-in-out infinite;
+}
+
+@keyframes killed-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-4px) rotate(-1deg); }
+  20% { transform: translateX(4px) rotate(1deg); }
+  30% { transform: translateX(-3px) rotate(-0.5deg); }
+  40% { transform: translateX(3px) rotate(0.5deg); }
+  50% { transform: translateX(-2px); }
+  60% { transform: translateX(2px); }
+  70% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+  90% { transform: translateX(0); }
+}
+
+@keyframes degraded-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.3);
+  }
+}
+
 /* ── Custom Animations ── */
 @keyframes slide-up {
   from {
@@ -99,12 +191,21 @@ body {
   }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .animate-slide-up {
   animation: slide-up 0.25s ease-out;
 }
 
 .animate-slide-down {
   animation: slide-down 0.2s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }
 
 /* ── Scrollbar ── */

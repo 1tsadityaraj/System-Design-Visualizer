@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect, useMemo } from 'react';
 import {
     ReactFlow,
     Background,
@@ -11,6 +11,8 @@ import useDiagramStore from '../store/useDiagramStore';
 import SystemNode from './customNodes/SystemNode';
 import LinterPanel from './LinterPanel';
 import SnapshotPanel from './SnapshotPanel';
+import LiveBill from './overlays/LiveBill';
+import Legend from './overlays/Legend';
 
 const nodeTypes = { systemNode: SystemNode };
 
@@ -23,7 +25,59 @@ export default function FlowCanvas() {
         nodes, edges,
         onNodesChange, onEdgesChange, onConnect,
         addNode, setSelectedNode, deleteSelected, undo, redo,
+        chaosMode, securityMode, securityFindings,
+        getStyledEdges,
     } = useDiagramStore();
+
+    // Compute styled edges for security/cross-region overlays
+    const styledEdges = useMemo(() => {
+        // Apply cross-region styling to edges
+        return edges.map(edge => {
+            const source = nodes.find(n => n.id === edge.source);
+            const target = nodes.find(n => n.id === edge.target);
+            let style = { ...edge.style };
+            let animated = edge.animated;
+            let className = edge.className || '';
+
+            // Cross-region dashed lines
+            if (source && target) {
+                const r1 = source.data?.region || 'us-east-1';
+                const r2 = target.data?.region || 'us-east-1';
+                if (r1 !== r2 && r1 !== 'global' && r2 !== 'global') {
+                    style.strokeDasharray = '10 5';
+                    animated = true;
+                    className = 'cross-region-edge';
+                    if (!edge.data?.dead && !edge.data?.rerouted) {
+                        style.stroke = '#a78bfa';
+                        style.strokeWidth = 2;
+                    }
+                }
+            }
+
+            // Security overlay
+            if (securityMode && securityFindings) {
+                const finding = securityFindings.find(f => f.edgeId === edge.id);
+                if (finding) {
+                    if (finding.severity === 'critical') {
+                        style.stroke = '#ef4444';
+                        style.strokeWidth = 3;
+                        animated = true;
+                        className = 'security-critical-edge';
+                    } else if (finding.severity === 'high') {
+                        style.stroke = '#f97316';
+                        style.strokeWidth = 2.5;
+                        animated = true;
+                        className = 'security-high-edge';
+                    } else if (finding.severity === 'medium') {
+                        style.stroke = '#fbbf24';
+                        style.strokeWidth = 2;
+                    }
+                }
+            }
+
+            return { ...edge, style, animated, className };
+        });
+    }, [edges, nodes, securityMode, securityFindings]);
 
     // ── Keyboard shortcuts ──
     useEffect(() => {
@@ -50,7 +104,6 @@ export default function FlowCanvas() {
             if (!raw) return;
             const config = JSON.parse(raw);
             const pos = screenToFlowPosition({ x: e.clientX, y: e.clientY });
-            // Snap to grid
             const position = {
                 x: Math.round(pos.x / GRID_SIZE) * GRID_SIZE,
                 y: Math.round(pos.y / GRID_SIZE) * GRID_SIZE,
@@ -69,10 +122,10 @@ export default function FlowCanvas() {
     );
 
     return (
-        <div className="w-full h-full relative" ref={wrapperRef}>
+        <div className={`w-full h-full relative ${chaosMode ? 'chaos-mode-active' : ''}`} ref={wrapperRef}>
             <ReactFlow
                 nodes={nodes}
-                edges={edges}
+                edges={styledEdges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
@@ -100,6 +153,10 @@ export default function FlowCanvas() {
                     }}
                     maskColor="rgba(15, 23, 42, 0.7)"
                     nodeColor={(n) => {
+                        // Chaos mode override colors
+                        if (n.data?.status === 'killed') return '#ef4444';
+                        if (n.data?.status === 'degraded') return '#fbbf24';
+
                         const sub = n.data?.subtype;
                         const colors = {
                             server: '#3b82f6', lambda: '#8b5cf6',
@@ -117,6 +174,28 @@ export default function FlowCanvas() {
             {/* Overlays */}
             <SnapshotPanel />
             <LinterPanel />
+            <LiveBill />
+            <Legend />
+
+            {/* Chaos Mode Overlay Border */}
+            {chaosMode && (
+                <div className="absolute inset-0 pointer-events-none border-2 border-red-500/30 rounded-sm z-20">
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-red-500/90 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2">
+                        <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                        CHAOS MODE — Click nodes to simulate failures
+                    </div>
+                </div>
+            )}
+
+            {/* Security Mode Overlay Border */}
+            {securityMode && !chaosMode && (
+                <div className="absolute inset-0 pointer-events-none border-2 border-violet-500/20 rounded-sm z-20">
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-violet-500/90 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2">
+                        <span className="w-2 h-2 bg-white rounded-full" />
+                        SECURITY AUDIT — Reviewing posture
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

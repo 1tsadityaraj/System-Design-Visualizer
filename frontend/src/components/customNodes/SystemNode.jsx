@@ -1,27 +1,46 @@
 import React, { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { ICON_MAP } from '../icons/ServiceIcons';
+import useDiagramStore from '../../store/useDiagramStore';
+import { Skull, AlertTriangle } from 'lucide-react';
 
 // Color palettes per category
 const THEMES = {
-    // Compute
     server: { accent: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.35)', glow: '0 0 20px rgba(59,130,246,0.15)' },
     lambda: { accent: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.35)', glow: '0 0 20px rgba(139,92,246,0.15)' },
-    // Storage
     sql: { accent: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.35)', glow: '0 0 20px rgba(245,158,11,0.15)' },
     nosql: { accent: '#f97316', bg: 'rgba(249,115,22,0.08)', border: 'rgba(249,115,22,0.35)', glow: '0 0 20px rgba(249,115,22,0.15)' },
     s3: { accent: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.35)', glow: '0 0 20px rgba(239,68,68,0.15)' },
-    // Networking
     balancer: { accent: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.35)', glow: '0 0 20px rgba(16,185,129,0.15)' },
     gateway: { accent: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.35)', glow: '0 0 20px rgba(6,182,212,0.15)' },
     cdn: { accent: '#14b8a6', bg: 'rgba(20,184,166,0.08)', border: 'rgba(20,184,166,0.35)', glow: '0 0 20px rgba(20,184,166,0.15)' },
-    // Misc
     cache: { accent: '#eab308', bg: 'rgba(234,179,8,0.08)', border: 'rgba(234,179,8,0.35)', glow: '0 0 20px rgba(234,179,8,0.15)' },
     queue: { accent: '#ec4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.35)', glow: '0 0 20px rgba(236,72,153,0.15)' },
     client: { accent: '#94a3b8', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.35)', glow: '0 0 20px rgba(148,163,184,0.10)' },
 };
 
 const DEFAULT_THEME = THEMES.server;
+
+// Chaos mode overrides
+const CHAOS_THEMES = {
+    killed: { accent: '#ef4444', bg: 'rgba(239,68,68,0.15)', border: 'rgba(239,68,68,0.6)', glow: '0 0 30px rgba(239,68,68,0.3)' },
+    degraded: { accent: '#fbbf24', bg: 'rgba(251,191,36,0.12)', border: 'rgba(251,191,36,0.5)', glow: '0 0 25px rgba(251,191,36,0.2)' },
+};
+
+// Security mode overlays
+const SECURITY_GLOW = {
+    critical: '0 0 30px rgba(239,68,68,0.4), 0 0 60px rgba(239,68,68,0.2)',
+    high: '0 0 25px rgba(249,115,22,0.35)',
+    medium: '0 0 20px rgba(251,191,36,0.25)',
+};
+
+const REGION_BADGES = {
+    'us-east-1': 'US-E',
+    'us-west-2': 'US-W',
+    'eu-central-1': 'EU',
+    'ap-south-1': 'APAC',
+    'global': 'GLB',
+};
 
 const handleStyle = (accent) => ({
     width: 9,
@@ -31,9 +50,21 @@ const handleStyle = (accent) => ({
     transition: 'all 0.15s ease',
 });
 
-function SystemNode({ data, selected }) {
-    const { subtype = 'server', label = 'Node', status = 'healthy' } = data;
-    const theme = THEMES[subtype] || DEFAULT_THEME;
+function SystemNode({ data, selected, id }) {
+    const { subtype = 'server', label = 'Node', status = 'healthy', region = 'us-east-1' } = data;
+    const chaosMode = useDiagramStore(s => s.chaosMode);
+    const killNode = useDiagramStore(s => s.killNode);
+    const securityMode = useDiagramStore(s => s.securityMode);
+    const securityFindings = useDiagramStore(s => s.securityFindings);
+
+    // Determine the theme
+    let theme = THEMES[subtype] || DEFAULT_THEME;
+    let isKilled = status === 'killed';
+    let isDegraded = status === 'degraded';
+
+    if (isKilled) theme = CHAOS_THEMES.killed;
+    else if (isDegraded) theme = CHAOS_THEMES.degraded;
+
     const IconComponent = ICON_MAP[subtype] || ICON_MAP.server;
 
     const statusColors = {
@@ -41,22 +72,47 @@ function SystemNode({ data, selected }) {
         warning: '#f59e0b',
         error: '#ef4444',
         offline: '#64748b',
+        killed: '#ef4444',
+        degraded: '#fbbf24',
+    };
+
+    // Check if this node has security findings
+    const nodeFindings = securityMode
+        ? securityFindings.filter(f => f.affectedNodes?.includes(id))
+        : [];
+    const worstSeverity = nodeFindings.reduce((w, f) => {
+        const order = { critical: 4, high: 3, medium: 2, low: 1 };
+        return (order[f.severity] || 0) > (order[w] || 0) ? f.severity : w;
+    }, null);
+
+    const securityGlow = worstSeverity ? SECURITY_GLOW[worstSeverity] : null;
+
+    const handleChaosClick = (e) => {
+        if (chaosMode && !isKilled) {
+            e.stopPropagation();
+            killNode(id);
+        }
     };
 
     return (
         <div
-            className="relative group"
+            className={`relative group ${chaosMode && !isKilled ? 'cursor-crosshair' : ''} ${isKilled ? 'chaos-killed-node' : ''} ${isDegraded ? 'chaos-degraded-node' : ''}`}
+            onClick={handleChaosClick}
             style={{
                 minWidth: 160,
                 background: theme.bg,
                 border: `1.5px solid ${selected ? '#ffffff' : theme.border}`,
                 borderRadius: 10,
                 padding: '12px 16px',
-                boxShadow: selected
-                    ? `0 0 0 2px rgba(255,255,255,0.1), ${theme.glow}`
-                    : theme.glow,
+                boxShadow: securityGlow
+                    ? securityGlow
+                    : selected
+                        ? `0 0 0 2px rgba(255,255,255,0.1), ${theme.glow}`
+                        : theme.glow,
                 transition: 'all 0.2s ease',
                 backdropFilter: 'blur(8px)',
+                opacity: isKilled ? 0.75 : 1,
+                filter: isKilled ? 'saturate(1.3)' : 'none',
             }}
         >
             {/* ── 4 Connection Handles ── */}
@@ -65,10 +121,10 @@ function SystemNode({ data, selected }) {
             <Handle type="target" position={Position.Left} id="left" style={handleStyle(theme.accent)} />
             <Handle type="source" position={Position.Right} id="right" style={handleStyle(theme.accent)} />
 
-            {/* ── Status Indicator (pulsing dot) ── */}
+            {/* ── Status Indicator ── */}
             <div className="absolute -top-1.5 -right-1.5 flex items-center justify-center">
                 <span
-                    className="absolute w-3 h-3 rounded-full animate-ping opacity-40"
+                    className={`absolute w-3 h-3 rounded-full ${isKilled || isDegraded ? 'animate-pulse' : 'animate-ping'} opacity-40`}
                     style={{ backgroundColor: statusColors[status] }}
                 />
                 <span
@@ -77,30 +133,70 @@ function SystemNode({ data, selected }) {
                 />
             </div>
 
+            {/* ── Region Badge ── */}
+            {region && region !== 'us-east-1' && (
+                <div className="absolute -top-2 left-3 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-slate-900/90 border border-slate-600/50 text-slate-400 tracking-wider uppercase">
+                    {REGION_BADGES[region] || region}
+                </div>
+            )}
+
+            {/* ── Killed Overlay ── */}
+            {isKilled && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-[10px] bg-red-950/40 z-10 pointer-events-none">
+                    <Skull size={28} className="text-red-400 opacity-80" />
+                </div>
+            )}
+
+            {/* ── Degraded Badge ── */}
+            {isDegraded && (
+                <div className="absolute -top-3 -left-2 z-10">
+                    <AlertTriangle size={16} className="text-amber-400 drop-shadow-lg" />
+                </div>
+            )}
+
+            {/* ── Security Warning Badge ── */}
+            {securityMode && worstSeverity && (
+                <div className={`absolute -bottom-2 -right-2 z-10 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-slate-900 ${worstSeverity === 'critical' ? 'bg-red-500 text-white' :
+                        worstSeverity === 'high' ? 'bg-orange-500 text-white' :
+                            'bg-yellow-500 text-black'
+                    }`}>
+                    {nodeFindings.length}
+                </div>
+            )}
+
+            {/* ── Chaos Click Hint ── */}
+            {chaosMode && !isKilled && !isDegraded && (
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[9px] text-red-400 font-bold whitespace-nowrap bg-slate-900/90 px-2 py-0.5 rounded border border-red-500/30">
+                    💀 Click to Kill
+                </div>
+            )}
+
             {/* ── Node Body ── */}
             <div className="flex items-center gap-3">
                 <div
                     className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                     style={{
-                        background: `linear-gradient(135deg, ${theme.accent}22, ${theme.accent}11)`,
-                        border: `1px solid ${theme.accent}44`,
+                        background: isKilled
+                            ? 'linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.1))'
+                            : `linear-gradient(135deg, ${theme.accent}22, ${theme.accent}11)`,
+                        border: `1px solid ${isKilled ? 'rgba(239,68,68,0.4)' : `${theme.accent}44`}`,
                     }}
                 >
-                    <IconComponent className="w-5 h-5" style={{ color: theme.accent }} />
+                    <IconComponent className="w-5 h-5" style={{ color: isKilled ? '#ef4444' : theme.accent }} />
                 </div>
 
                 <div className="flex flex-col min-w-0">
                     <span
-                        className="font-semibold text-[13px] leading-tight text-white truncate"
+                        className={`font-semibold text-[13px] leading-tight truncate ${isKilled ? 'line-through text-red-300' : 'text-white'}`}
                         style={{ maxWidth: 120 }}
                     >
                         {label}
                     </span>
                     <span
                         className="text-[10px] font-bold uppercase tracking-widest mt-0.5"
-                        style={{ color: theme.accent, opacity: 0.7 }}
+                        style={{ color: isKilled ? '#ef4444' : theme.accent, opacity: 0.7 }}
                     >
-                        {subtype}
+                        {isKilled ? 'KILLED' : isDegraded ? 'DEGRADED' : subtype}
                     </span>
                 </div>
             </div>
