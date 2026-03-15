@@ -16,6 +16,13 @@
 
 ---
 
+## 🚀 Live Deployments
+
+- **Frontend (Vercel):** [https://frontend-gamma-six-56.vercel.app](https://frontend-gamma-six-56.vercel.app)
+- **Backend API (Render):** [https://system-design-visualizer.onrender.com](https://system-design-visualizer.onrender.com)
+
+---
+
 ## 🎬 Demo — Building the "Golden Path" Architecture
 
 <div align="center">
