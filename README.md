@@ -14,6 +14,9 @@
 
 </div>
 
+> **👋 For Technical Recruiters & Engineering Managers:** 
+> This is a complex engineering platform that goes far beyond standard CRUD applications. It demonstrates a deep understanding of **Distributed Systems**, **Site Reliability Engineering (SRE)**, **DevSecOps**, and **Cloud Economics**. If you're looking for a candidate who understands how to design, scale, secure, and fund production-grade infrastructure—this project proves exactly that.
+
 ---
 
 ## 🚀 Live Deployments
@@ -51,17 +54,17 @@
 
 ---
 
-## ✨ What Makes This Different
+## ✨ What Makes This Different (Why It Matters)
 
 This isn't just a drag-and-drop diagramming tool. It's a **five-layer engineering platform** that proves understanding of distributed systems, SRE, DevSecOps, Cloud Economics, and production-grade infrastructure:
 
-| Layer | What It Does | The Signal It Sends |
+| Engineering Layer | What It Does | The Signal It Sends To Hiring Managers |
 |---|---|---|
-| **Architecture Linter** | Real-time static analysis — flags anti-patterns (SPOF, missing LB, orphaned nodes) | *"I validate topology against distributed systems best practices in O(n+e) time."* |
-| **Chaos Engineering** | Kill nodes, propagate failures, re-route traffic through replicas | *"I understand that systems fail — and I design for failover and high availability."* |
-| **Cloud Economics** | Live monthly cost estimate with per-component AWS pricing breakdown | *"I can think about the bottom line — a 'cool' architecture is useless if it bankrupts the company."* |
-| **Security Posture** | DevSecOps audit — scores architecture against 5 vulnerability rules | *"I have a Security-First mindset. I flag Direct DB Exposure as a critical risk."* |
-| **Enterprise Exports** | Generates K8s manifests (Deployment, Service, Ingress, HPA) + Terraform HCL with variables | *"I'm production-ready. I understand container orchestration, IaC, and scaling."* |
+| 🔍 **Architecture Linter** | Real-time static analysis — flags anti-patterns (SPOF, missing LB, orphaned nodes) | *"I validate topology against distributed systems best practices in O(n+e) time."* |
+| 💀 **Chaos Engineering** | Kill nodes, propagate failures, re-route traffic through replicas | *"I understand that systems fail — and I design for failover and high availability."* |
+| 💰 **Cloud Economics** | Live monthly cost estimate with per-component AWS pricing breakdown | *"I can think about the bottom line — a 'cool' architecture is useless if it bankrupts the company."* |
+| 🛡️ **Security Posture** | DevSecOps audit — scores architecture against 5 vulnerability rules | *"I have a Security-First mindset. I flag Direct DB Exposure as a critical risk."* |
+| 📦 **Enterprise Exports** | Generates K8s manifests (Deployment, Service, Ingress, HPA) + Terraform HCL with variables | *"I am production-ready. I understand container orchestration, IaC, and scaling."* |
 
 ---
 
@@ -364,20 +367,18 @@ Open **http://localhost:5173** in your browser.
 
 ---
 
-## 🏗️ Tech Stack
+## 🏗️ Technical Stack & Skills Demonstrated
 
-| Layer | Technology | Why |
+| Layer | Technology Highlight | Engineering Justification |
 |---|---|---|
-| **UI** | React 18 + Vite | Fast HMR, component model |
-| **State** | Zustand | Simpler than Redux, built-in subscriptions |
-| **Canvas** | React Flow | Industrial-grade graph rendering |
-| **Styling** | Tailwind CSS v4 | Utility-first, dark mode |
-| **Backend** | Express.js | Lightweight, middleware ecosystem |
-| **Database** | MongoDB + Mongoose | Schema-flexible for graph data |
-| **Auth** | JWT + bcrypt | Stateless, secure password hashing |
-| **Real-time** | Socket.io | WebSocket rooms for collaboration |
-| **IaC** | Custom generators | Docker Compose + Terraform HCL + K8s Manifests |
-| **Bundling** | JSZip | Client-side ZIP generation for K8s exports |
+| **Frontend UI** | React 18, Vite, Tailwind CSS v4 | Build highly interactive, responsive, and performant visualizations. |
+| **State Mgt** | Zustand, React Flow | Manages complex graph data structures, undo/redo stacks, and real-time canvas updates. |
+| **Backend API** | Node.js, Express.js | Lightweight, highly scalable REST API implementation. |
+| **Database** | MongoDB, Mongoose | Schema-flexible data modeling for deeply nested directed graph architecture states. |
+| **Auth & Sec**| JWT, bcrypt | Stateless, secure authentication and password hashing. |
+| **Real-time** | Socket.io | Bi-directional WebSockets for live cursor movements and multi-user collaboration. |
+| **DevOps / IaC**| Terraform, Kubernetes, Docker | Custom generators that transpile visual graphs into production-ready manifests. |
+| **Algorithms** | BFS / DFS | Real-time static analysis and chaos degradation propagation across directed acyclic graphs. |
 
 ---
 
